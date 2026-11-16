@@ -77,4 +77,5 @@ Use the GitHub UI, `gh pr create`, or the auto-PR workflow. Complete
 
 | Version | Date | Notes |
 | --- | --- | --- |
+| `v0.1.1` | 2026-11-16 | Patch: exact-seven-artifact validation, private/draft metadata enforcement |
 | `v0.1.0` | 2026-11-16 | First process-compliant release: deterministic package builder, validation, CI, SPECv1 tree |

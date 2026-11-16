@@ -4,6 +4,22 @@ All notable changes to NewsMemeAI YouTube are documented here. The format follow
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.1] — 2026-11-16
+
+### Fixed
+
+- `validate` now enforces the exact seven-artifact manifest contract: missing,
+  unexpected, and renamed artifacts are rejected, along with checksum and byte-size
+  mismatches.
+- `validate` now rejects metadata that is not `privacy_status: private`,
+  `made_for_kids: false`, `shorts: true`, and `category_id: "24"`.
+- `validate` now rejects a manifest whose review status is anything other than `draft`,
+  whose generator identity is wrong, or whose frame/thumbnail dimensions are wrong.
+- `manifest.schema.json` now caps `files` at seven properties, requires all seven names,
+  and restricts property names to the artifact enum.
+- Added four validator tests (77 total) covering public metadata, approved review,
+  extra manifest artifacts, and wrong dimensions.
+
 ## [0.1.0] — 2026-11-16
 
 ### Added
@@ -31,4 +47,5 @@ All notable changes to NewsMemeAI YouTube are documented here. The format follow
 - Feed and model text is escaped before entering SVG or JSON.
 - No runtime third-party dependencies.
 
+[0.1.1]: https://github.com/jeanmachuca/newsmemeai-youtube/releases/tag/v0.1.1
 [0.1.0]: https://github.com/jeanmachuca/newsmemeai-youtube/releases/tag/v0.1.0
