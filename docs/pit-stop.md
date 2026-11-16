@@ -107,6 +107,7 @@ Run at kickoff, quarter start, release, or after significant drift.
 | Lap | Date | Review | Refuel | Restart | Owner |
 | --- | --- | --- | --- | --- | --- |
 | L0 | 2026-11-16 | Bootstrap audit: specs, CI, package contract | Fixed drift found by strict audit | v0.1.0 release PR and tag | Pilot |
+| L1 | 2026-11-16 | v0.1.0 validator accepted public metadata and approved reviews | Tightened FR-009/FR-010 and manifest schema | v0.1.1 release PR and tag | Pilot |
 
 ## Vibe Audit log
 
@@ -119,3 +120,4 @@ Run at kickoff, quarter start, release, or after significant drift.
 | Date | Author | Change | Rationale |
 | --- | --- | --- | --- |
 | 2026-11-16 | Pilot | Initial ritual and checklist | Apply pit-stop-audit to v0.1. |
+| 2026-11-16 | Pilot | Recorded L1 validator patch | Close the contract gap before the next Lap. |

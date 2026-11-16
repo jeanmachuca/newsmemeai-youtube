@@ -88,3 +88,63 @@ def test_extra_files_are_allowed(tmp_path: Path) -> None:
     (package / "notes.txt").write_text("producer notes", encoding="utf-8")
     result = validate_package(package)
     assert result.ok, result.issues
+
+
+def _edit_json(path: Path, mutate) -> None:
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    mutate(payload)
+    path.write_text(json.dumps(payload), encoding="utf-8")
+
+
+def test_public_metadata_is_detected(tmp_path: Path) -> None:
+    package = _build(tmp_path)
+
+    def mutate(metadata: dict[str, object]) -> None:
+        metadata["privacy_status"] = "public"
+
+    _edit_json(package / "metadata.json", mutate)
+    result = validate_package(package)
+    assert not result.ok
+    assert any("privacy_status must be 'private'" in issue for issue in result.issues)
+
+
+def test_approved_review_is_detected(tmp_path: Path) -> None:
+    package = _build(tmp_path)
+
+    def mutate(manifest: dict[str, object]) -> None:
+        review = manifest["review"]
+        assert isinstance(review, dict)
+        review["status"] = "approved"
+
+    _edit_json(package / "manifest.json", mutate)
+    result = validate_package(package)
+    assert not result.ok
+    assert any("review.status must be 'draft'" in issue for issue in result.issues)
+
+
+def test_extra_manifest_artifact_is_detected(tmp_path: Path) -> None:
+    package = _build(tmp_path)
+
+    def mutate(manifest: dict[str, object]) -> None:
+        files = manifest["files"]
+        assert isinstance(files, dict)
+        files["bonus.svg"] = {"sha256": "0" * 64, "bytes": 1}
+
+    _edit_json(package / "manifest.json", mutate)
+    result = validate_package(package)
+    assert not result.ok
+    assert any("unexpected artifact bonus.svg" in issue for issue in result.issues)
+
+
+def test_wrong_dimensions_are_detected(tmp_path: Path) -> None:
+    package = _build(tmp_path)
+
+    def mutate(manifest: dict[str, object]) -> None:
+        dimensions = manifest["dimensions"]
+        assert isinstance(dimensions, dict)
+        dimensions["frame"] = [1920, 1080]
+
+    _edit_json(package / "manifest.json", mutate)
+    result = validate_package(package)
+    assert not result.ok
+    assert any("dimensions.frame must be [1080, 1920]" in issue for issue in result.issues)

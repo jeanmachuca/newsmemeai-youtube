@@ -9,15 +9,21 @@ from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
 from typing import cast
 
+from . import GENERATOR_NAME
 from .package import (
     PACKAGE_SCHEMA_VERSION,
     REQUIRED_ARTIFACTS,
+    YOUTUBE_CATEGORY,
     YOUTUBE_DESCRIPTION_LIMIT,
     YOUTUBE_TAG_BUDGET,
     YOUTUBE_TITLE_LIMIT,
 )
+from .render import THUMBNAIL_HEIGHT, THUMBNAIL_WIDTH, VERTICAL_HEIGHT, VERTICAL_WIDTH
+from .script import STYLES
 
 _SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
+_SEMVER_RE = re.compile(r"^\d+\.\d+\.\d+$")
+_REVIEW_CONTRACT = {"status": "draft", "required": True, "checklist": "REVIEW.md"}
 
 
 @dataclass(frozen=True, slots=True)
@@ -63,6 +69,17 @@ def _check_metadata(root: Path, issues: list[str]) -> None:
         issues.append("metadata.json: expected a JSON object")
         return
 
+    if payload.get("schema_version") != PACKAGE_SCHEMA_VERSION:
+        issues.append(f"metadata.json: schema_version must be {PACKAGE_SCHEMA_VERSION}")
+    if payload.get("privacy_status") != "private":
+        issues.append("metadata.json: privacy_status must be 'private'")
+    if payload.get("made_for_kids") is not False:
+        issues.append("metadata.json: made_for_kids must be false")
+    if payload.get("shorts") is not True:
+        issues.append("metadata.json: shorts must be true")
+    if payload.get("category_id") != YOUTUBE_CATEGORY:
+        issues.append(f"metadata.json: category_id must be {YOUTUBE_CATEGORY!r}")
+
     title = payload.get("title")
     if not isinstance(title, str) or not title.strip():
         issues.append("metadata.json: title must be a non-empty string")
@@ -84,6 +101,57 @@ def _check_metadata(root: Path, issues: list[str]) -> None:
             issues.append(f"metadata.json: tag budget exceeds {YOUTUBE_TAG_BUDGET}")
 
 
+def _check_manifest_identity(payload: dict[str, object], issues: list[str]) -> None:
+    generator = payload.get("generator")
+    if not isinstance(generator, dict):
+        issues.append("manifest.json: generator must be an object")
+    else:
+        if generator.get("name") != GENERATOR_NAME:
+            issues.append(f"manifest.json: generator.name must be {GENERATOR_NAME!r}")
+        version = generator.get("version")
+        if not isinstance(version, str) or not _SEMVER_RE.fullmatch(version):
+            issues.append("manifest.json: generator.version must be SemVer")
+
+    style = payload.get("style")
+    if style not in STYLES:
+        issues.append(f"manifest.json: style must be one of {', '.join(STYLES)}")
+
+    dimensions = payload.get("dimensions")
+    expected_dimensions = {
+        "frame": [VERTICAL_WIDTH, VERTICAL_HEIGHT],
+        "thumbnail": [THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT],
+    }
+    if not isinstance(dimensions, dict):
+        issues.append("manifest.json: dimensions must be an object")
+    else:
+        for name, expected in expected_dimensions.items():
+            if dimensions.get(name) != expected:
+                issues.append(f"manifest.json: dimensions.{name} must be {expected}")
+
+    review = payload.get("review")
+    if not isinstance(review, dict):
+        issues.append("manifest.json: review must be an object")
+    else:
+        for key, expected_review in _REVIEW_CONTRACT.items():
+            if review.get(key) != expected_review:
+                issues.append(f"manifest.json: review.{key} must be {expected_review!r}")
+
+    headline = payload.get("headline")
+    if not isinstance(headline, dict) or not isinstance(headline.get("title"), str):
+        issues.append("manifest.json: headline.title must be a string")
+    elif not str(headline["title"]).strip():
+        issues.append("manifest.json: headline.title must not be empty")
+
+    script = payload.get("script")
+    if not isinstance(script, dict):
+        issues.append("manifest.json: script must be an object")
+    else:
+        for key in ("hook", "context", "punchline"):
+            value = script.get(key)
+            if not isinstance(value, str) or not value.strip():
+                issues.append(f"manifest.json: script.{key} must be a non-empty string")
+
+
 def validate_package(package_dir: str | Path) -> ValidationResult:
     """Validate the manifest and every artifact in ``package_dir``."""
 
@@ -103,15 +171,7 @@ def validate_package(package_dir: str | Path) -> ValidationResult:
     if payload.get("schema_version") != PACKAGE_SCHEMA_VERSION:
         issues.append(f"manifest.json: schema_version must be {PACKAGE_SCHEMA_VERSION}")
 
-    generator = payload.get("generator")
-    if not isinstance(generator, dict) or not isinstance(generator.get("name"), str):
-        issues.append("manifest.json: generator.name is required")
-    if not isinstance(payload.get("headline"), dict):
-        issues.append("manifest.json: headline must be an object")
-    if not isinstance(payload.get("script"), dict):
-        issues.append("manifest.json: script must be an object")
-    if not isinstance(payload.get("review"), dict):
-        issues.append("manifest.json: review must be an object")
+    _check_manifest_identity(payload, issues)
 
     files = payload.get("files")
     if not isinstance(files, dict) or not files:
@@ -122,6 +182,9 @@ def validate_package(package_dir: str | Path) -> ValidationResult:
     missing = sorted(set(REQUIRED_ARTIFACTS) - set(files))
     for name in missing:
         issues.append(f"manifest.json: missing required artifact {name}")
+    unexpected = sorted(set(files) - set(REQUIRED_ARTIFACTS))
+    for name in unexpected:
+        issues.append(f"manifest.json: unexpected artifact {name}")
 
     for name, entry in files.items():
         if not isinstance(name, str) or not isinstance(entry, dict):

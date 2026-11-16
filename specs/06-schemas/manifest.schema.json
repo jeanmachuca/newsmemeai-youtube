@@ -84,8 +84,26 @@
     "files": {
       "type": "object",
       "minProperties": 7,
+      "maxProperties": 7,
+      "required": [
+        "frame-01-hook.svg",
+        "frame-02-context.svg",
+        "frame-03-punchline.svg",
+        "thumbnail.svg",
+        "script.md",
+        "metadata.json",
+        "REVIEW.md"
+      ],
       "propertyNames": {
-        "pattern": "^(?!manifest\\.json$)(?!.*\\.\\.)[A-Za-z0-9._-]+$"
+        "enum": [
+          "frame-01-hook.svg",
+          "frame-02-context.svg",
+          "frame-03-punchline.svg",
+          "thumbnail.svg",
+          "script.md",
+          "metadata.json",
+          "REVIEW.md"
+        ]
       },
       "additionalProperties": {
         "type": "object",

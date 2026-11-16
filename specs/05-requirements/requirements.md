@@ -27,8 +27,8 @@ level, and a verification method.
 | FR-006 | MAY | The script engine MAY call an OpenAI-compatible endpoint when base URL and model are configured. | `test_script.py::test_generate_script_uses_model_when_configured` |
 | FR-007 | MUST | A package MUST contain three vertical frames, one thumbnail, `script.md`, `metadata.json`, `REVIEW.md`, and `manifest.json`. | `test_package.py::test_build_package_creates_all_artifacts` |
 | FR-008 | MUST | The manifest MUST include a SHA-256 digest and byte size for every required artifact. | `test_package.py::test_build_package_creates_all_artifacts` |
-| FR-009 | MUST | The CLI MUST provide a `validate` command that rejects missing files, checksum mismatches, and unsafe paths. | `test_validate.py` |
-| FR-010 | MUST | The system MUST NOT upload, schedule, or publish to YouTube in v0.1; packages MUST default to private. | `test_package.py::test_youtube_metadata_limits` |
+| FR-009 | MUST | The CLI MUST provide a `validate` command that rejects missing, unexpected, or renamed manifest artifacts, checksum or size mismatches, unsafe paths, invalid manifest identity, non-private metadata, and a non-draft review status. | `test_validate.py::test_tampered_artifact_is_detected`, `test_missing_artifact_is_detected`, `test_extra_manifest_artifact_is_detected`, `test_public_metadata_is_detected`, `test_approved_review_is_detected`, `test_wrong_dimensions_are_detected` |
+| FR-010 | MUST | The system MUST NOT upload, schedule, or publish to YouTube in v0.1; packages MUST default to private and `validate` MUST reject metadata that is not private. | `test_package.py::test_youtube_metadata_limits`, `test_validate.py::test_public_metadata_is_detected` |
 | FR-011 | MUST | Untrusted headline, summary, and model text MUST be escaped before entering SVG or JSON. | `test_render.py::test_story_frame_dimensions_and_escaping` |
 | FR-012 | MUST | The manifest MUST record the source headline, link, feed location, and publication timestamp. | `test_package.py::test_build_package_creates_all_artifacts` |
 | FR-013 | MUST | Feed, model, package, and validation errors MUST produce a non-zero exit code and a human-readable message. | `test_cli.py::test_missing_feed`, `test_build_index_out_of_range` |
@@ -81,3 +81,4 @@ level, and a verification method.
 | Date | Author | RFC 2119 level changed | Rationale |
 | --- | --- | --- | --- |
 | 2026-11-16 | Pilot | Initial | v0.1 FR/NFR baseline with test-level verification. |
+| 2026-11-16 | Pilot | FR-009, FR-010 tightened | v0.1.1 closes the exact-seven-artifact and private/draft validation gap. |
