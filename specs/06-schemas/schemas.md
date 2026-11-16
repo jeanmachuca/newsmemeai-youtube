@@ -14,6 +14,11 @@ the future upload boundary.
 - The manifest MUST NOT include itself in its own file list.
 - `metadata.json` MUST keep `privacy_status` at `private` for v0.1.
 - The validator MUST reject a manifest that lists an absolute path or a parent traversal.
+- The validator MUST reject a package whose manifest omits, adds, or renames an artifact
+  outside the seven-name contract.
+- The validator MUST reject metadata that is not `privacy_status: private`,
+  `made_for_kids: false`, `shorts: true`, and `category_id: "24"`.
+- The validator MUST reject a manifest whose `review.status` is not `draft`.
 - Future schema changes MUST preserve backward validation within the same major version.
 
 ## Manifest v1

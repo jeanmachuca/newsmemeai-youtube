@@ -139,7 +139,7 @@ CI runs the same checks on Python 3.11, 3.12, and 3.13.
 
 ```
 src/newsmemeai_youtube/   # feeds, script, render, package, validate, CLI
-tests/                    # 73 offline tests and XML fixtures
+tests/                    # 77 offline tests and XML fixtures
 specs/                    # SPECv1 folders 01–11 + audit report
 scripts/                  # audit_specs.py, benchmark.py, verify.sh
 docs/                     # process and workflow documentation
