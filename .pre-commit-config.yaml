@@ -1,0 +1,31 @@
+minimum_pre_commit_version: "3.7.0"
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.9.6
+    hooks:
+      - id: ruff
+        args: [--fix]
+      - id: ruff-format
+  - repo: local
+    hooks:
+      - id: mypy
+        name: mypy (strict)
+        entry: mypy src/
+        language: system
+        pass_filenames: false
+        types: [python]
+        stages: [pre-push]
+      - id: pytest
+        name: pytest
+        entry: pytest -q
+        language: system
+        pass_filenames: false
+        types: [python]
+        stages: [pre-push]
+      - id: spec-audit
+        name: spec audit (strict)
+        entry: python scripts/audit_specs.py --strict
+        language: system
+        pass_filenames: false
+        always_run: true
+        stages: [pre-push]

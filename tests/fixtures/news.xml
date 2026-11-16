@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>NewsMemeAI YouTube demo feed</title>
+    <link>https://example.com/news</link>
+    <description>Offline fixture for demos and tests.</description>
+    <item>
+      <title>Scientists teach robots to smell pizza</title>
+      <link>https://example.com/news/robots-pizza</link>
+      <pubDate>Mon, 16 Nov 2026 09:00:00 GMT</pubDate>
+      <description><![CDATA[<p>A lab says the sensor could help future kitchen robots.</p>]]></description>
+    </item>
+    <item>
+      <title>City opens a new park &amp; plaza</title>
+      <link>https://example.com/news/park</link>
+      <pubDate>Mon, 16 Nov 2026 08:30:00 GMT</pubDate>
+      <description>The council says the project took two years.</description>
+    </item>
+    <item>
+      <title>Moon gets a new parking lot</title>
+      <link>https://example.com/news/moon</link>
+      <pubDate>Mon, 16 Nov 2026 08:00:00 GMT</pubDate>
+    </item>
+  </channel>
+</rss>

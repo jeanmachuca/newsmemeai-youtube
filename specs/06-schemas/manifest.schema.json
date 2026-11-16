@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/jeanmachuca/newsmemeai-youtube/specs/06-schemas/manifest.schema.json",
+  "title": "NewsMemeAI YouTube Package Manifest",
+  "description": "Provenance and integrity contract for one Shorts package.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "generator",
+    "style",
+    "headline",
+    "script",
+    "review",
+    "dimensions",
+    "files"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "generator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "version"],
+      "properties": {
+        "name": { "const": "newsmemeai-youtube" },
+        "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" }
+      }
+    },
+    "style": { "enum": ["classic", "reaction", "headline"] },
+    "headline": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["title", "link", "source", "published", "summary"],
+      "properties": {
+        "title": { "type": "string", "minLength": 1 },
+        "link": { "type": "string" },
+        "source": { "type": "string" },
+        "published": { "type": "string" },
+        "summary": { "type": "string" }
+      }
+    },
+    "script": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["hook", "context", "punchline", "rationale", "model", "style"],
+      "properties": {
+        "hook": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "context": { "type": "string", "minLength": 1, "maxLength": 260 },
+        "punchline": { "type": "string", "minLength": 1, "maxLength": 100 },
+        "rationale": { "type": "string" },
+        "model": { "type": "string" },
+        "style": { "enum": ["classic", "reaction", "headline"] }
+      }
+    },
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "required", "checklist"],
+      "properties": {
+        "status": { "const": "draft" },
+        "required": { "const": true },
+        "checklist": { "const": "REVIEW.md" }
+      }
+    },
+    "dimensions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["frame", "thumbnail"],
+      "properties": {
+        "frame": {
+          "type": "array",
+          "prefixItems": [{ "const": 1080 }, { "const": 1920 }],
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "thumbnail": {
+          "type": "array",
+          "prefixItems": [{ "const": 1280 }, { "const": 720 }],
+          "minItems": 2,
+          "maxItems": 2
+        }
+      }
+    },
+    "files": {
+      "type": "object",
+      "minProperties": 7,
+      "propertyNames": {
+        "pattern": "^(?!manifest\\.json$)(?!.*\\.\\.)[A-Za-z0-9._-]+$"
+      },
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["sha256", "bytes"],
+        "properties": {
+          "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+          "bytes": { "type": "integer", "minimum": 1 }
+        }
+      }
+    }
+  }
+}
