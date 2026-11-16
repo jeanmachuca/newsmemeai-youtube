@@ -1,0 +1,3 @@
+# Runtime dependencies are intentionally empty.
+# NewsMemeAI YouTube uses only the Python standard library.
+# See specs/04-adrs/0001-stdlib-first-runtime.md.

@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/jeanmachuca/newsmemeai-youtube/specs/06-schemas/metadata.schema.json",
+  "title": "NewsMemeAI YouTube Metadata",
+  "description": "Review-first YouTube metadata for one Shorts package.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "title",
+    "description",
+    "tags",
+    "category_id",
+    "privacy_status",
+    "made_for_kids",
+    "shorts"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "title": { "type": "string", "minLength": 1, "maxLength": 100 },
+    "description": { "type": "string", "maxLength": 5000 },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1, "maxLength": 100 },
+      "maxItems": 20
+    },
+    "category_id": { "const": "24" },
+    "privacy_status": { "const": "private" },
+    "made_for_kids": { "const": false },
+    "shorts": { "const": true }
+  }
+}
