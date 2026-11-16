@@ -1,0 +1,64 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "newsmemeai-youtube"
+version = "0.1.0"
+description = "Turn news headlines into review-ready YouTube Shorts packages."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "Jean Machuca", email = "correojean@gmail.com" }]
+keywords = ["ai", "memes", "news", "youtube", "shorts", "rss", "llm", "cli"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Typing :: Typed",
+]
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+    "mypy>=1.15",
+    "pytest>=8.0",
+    "ruff>=0.9",
+]
+
+[project.scripts]
+newsmemeai-youtube = "newsmemeai_youtube.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/jeanmachuca/newsmemeai-youtube"
+Repository = "https://github.com/jeanmachuca/newsmemeai-youtube"
+Issues = "https://github.com/jeanmachuca/newsmemeai-youtube/issues"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+newsmemeai_youtube = ["py.typed"]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["B", "E", "F", "I", "SIM", "UP"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+mypy_path = "src"
+files = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+pythonpath = ["src"]
