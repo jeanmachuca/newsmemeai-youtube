@@ -120,9 +120,11 @@ crossed.
 | Lap | Date | Packages reviewed | IRA % | Median review min | Circuit Delta % | Open debt | Decision |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | L0 | 2026-11-16 | 0 | N/A | UNBASELINED | UNBASELINED | 0 | Bootstrap; no packages reviewed yet |
+| L1 | 2026-11-16 | 0 | N/A | UNBASELINED | UNBASELINED | 0 | v0.1.1 patch closes the validator/schema contract gap |
 
 ## Change Log
 
 | Date | Author | Change | Rationale |
 | --- | --- | --- | --- |
 | 2026-11-16 | Pilot | Initial HUD | Three signals, bands, and escalation triggers for v0.1. |
+| 2026-11-16 | Pilot | Recorded L1 and v0.1.1 | Track the patch release in the Lap log. |
